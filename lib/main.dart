@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        scaffoldBackgroundColor: Colors.white, // 전체 배경색을 흰색으로 설정
+        scaffoldBackgroundColor: Colors.white,
       ),
       home: const MyHomePage(title: 'Speech to Text Toggle'),
     );
@@ -33,11 +33,18 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<String> _messages = [];
+  final FocusNode _focusNode = FocusNode();  // FocusNode 추가
 
   void _addMessage(String message) {
     setState(() {
       _messages.add(message);
     });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();  // FocusNode 해제
+    super.dispose();
   }
 
   @override
@@ -57,7 +64,10 @@ class _MyHomePageState extends State<MyHomePage> {
               Expanded(
                 child: TextListView(items: _messages),
               ),
-              CustomTextFormField(onSend: _addMessage),
+              CustomTextFormField(
+                onSend: _addMessage,
+                focusNode: _focusNode,  // FocusNode 전달
+              ),
             ],
           ),
         ),
